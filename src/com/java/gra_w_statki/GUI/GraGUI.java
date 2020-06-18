@@ -115,7 +115,15 @@ public class GraGUI extends JFrame implements ActionListener{
         setTitle("Gra w statki");
         setBounds(540, 150, 920, 730);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+        b1.setName("b1");
+        b2.setName("b2");
+        b3.setName("b3");
+        b4.setName("b4");
+        b5.setName("b5");
+        b6.setName("b6");
+        b7.setName("b7");
+        b8.setName("b8");
+        b9.setName("b9");
         b1.addActionListener(this);
         b2.addActionListener(this);
         b3.addActionListener(this);
@@ -129,13 +137,14 @@ public class GraGUI extends JFrame implements ActionListener{
 
 
     }
-
     private void createUIComponents() {
         // TODO: place custom component creation code here
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getID());
+        JButton pom;
+        pom = (JButton) e.getSource();
+        System.out.println(pom.getName());
     }
 }
