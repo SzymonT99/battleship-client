@@ -1,15 +1,13 @@
 package com.java.gra_w_statki.GUI;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Gra {
-    private JButton b1;
-    private JButton b31;
+public class GraGUI extends JFrame implements ActionListener{
     private JButton b12;
     private JButton b2;
-    private JButton b61;
     private JButton b56;
-    private JButton b11;
     private JButton b3;
     private JButton b4;
     private JButton b5;
@@ -26,7 +24,6 @@ public class Gra {
     private JButton b18;
     private JButton b19;
     private JButton b20;
-    private JButton b21;
     private JButton b22;
     private JButton b23;
     private JButton b24;
@@ -45,7 +42,6 @@ public class Gra {
     private JButton b38;
     private JButton b39;
     private JButton b40;
-    private JButton b41;
     private JButton b42;
     private JButton b43;
     private JButton b44;
@@ -55,7 +51,6 @@ public class Gra {
     private JButton b48;
     private JButton b49;
     private JButton b50;
-    private JButton b51;
     private JButton b52;
     private JButton b53;
     private JButton b54;
@@ -73,7 +68,6 @@ public class Gra {
     private JButton b68;
     private JButton b69;
     private JButton b70;
-    private JButton b71;
     private JButton b72;
     private JButton b73;
     private JButton b74;
@@ -83,7 +77,6 @@ public class Gra {
     private JButton b78;
     private JButton b79;
     private JButton b80;
-    private JButton b81;
     private JButton b82;
     private JButton b83;
     private JButton b84;
@@ -93,7 +86,6 @@ public class Gra {
     private JButton b88;
     private JButton b89;
     private JButton b90;
-    private JButton b91;
     private JButton b92;
     private JButton b93;
     private JButton b94;
@@ -103,8 +95,47 @@ public class Gra {
     private JButton b98;
     private JButton b99;
     private JButton b100;
+    private JButton b1;
+    private JButton b11;
+    private JButton b21;
+    private JButton b31;
+    private JButton b41;
+    private JButton b51;
+    private JButton b61;
+    private JButton b71;
+    private JButton b81;
+    private JButton b91;
+    private JButton ustawStatkiButton;
+    private JButton wyjdzZGryButton;
+    private JButton przerwijGreButton;
+    private JPanel mainPanel;
+
+    public GraGUI() {
+        add(mainPanel);
+        setTitle("Gra w statki");
+        setBounds(540, 150, 920, 730);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        b1.addActionListener(this);
+        b2.addActionListener(this);
+        b3.addActionListener(this);
+        b4.addActionListener(this);
+        b5.addActionListener(this);
+        b6.addActionListener(this);
+        b7.addActionListener(this);
+        b8.addActionListener(this);
+        b9.addActionListener(this);
+        b10.addActionListener(this);
+
+
+    }
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(e.getID());
     }
 }
