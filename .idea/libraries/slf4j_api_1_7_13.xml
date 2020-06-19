@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="slf4j-api-1.7.13">
+    <CLASSES>
+      <root url="jar://D:/Java-pizza/project_08_codeofhonor_client/lib/slf4j-api-1.7.13.jar!/" />
+      <root url="jar://D:/Java-pizza/project_08_codeofhonor_client/lib/commons-codec-1.9.jar!/" />
+      <root url="jar://D:/Java-pizza/project_08_codeofhonor_client/lib/commons-logging-1.2.jar!/" />
+      <root url="jar://D:/Java-pizza/project_08_codeofhonor_client/lib/gson-2.3.1.jar!/" />
+      <root url="jar://D:/Java-pizza/project_08_codeofhonor_client/lib/httpclient-4.5.2.jar!/" />
+      <root url="jar://D:/Java-pizza/project_08_codeofhonor_client/lib/httpcore-4.4.4.jar!/" />
+      <root url="jar://D:/Java-pizza/project_08_codeofhonor_client/lib/io-7.0.0.jar!/" />
+      <root url="jar://D:/Java-pizza/project_08_codeofhonor_client/lib/itextpdf-5.5.9.jar!/" />
+      <root url="jar://D:/Java-pizza/project_08_codeofhonor_client/lib/kernel-7.0.0.jar!/" />
+      <root url="jar://D:/Java-pizza/project_08_codeofhonor_client/lib/layout-7.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
