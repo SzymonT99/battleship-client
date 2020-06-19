@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GraGUI extends JFrame implements ActionListener{
     private JButton b12;
@@ -125,7 +126,7 @@ public class GraGUI extends JFrame implements ActionListener{
     private Statek statek3_2 = new Statek(3, 3);
     private Statek statek4 = new Statek(4, 4);
     private Statek statek5 = new Statek(5, 5);
-    private Integer hp = 0;
+    private Integer hp = 1;
 
 
     public GraGUI() {
@@ -171,55 +172,159 @@ public class GraGUI extends JFrame implements ActionListener{
         // TODO: place custom component creation code here
     }
 
+    private Boolean poprawnoscPola(Statek statek, Pole pole){
+        if(planszaGracza.getListaPol().get(pole.getId() - 1).getStan() != 0) return false;
+        if(statek.getListaPol().size() == 1){
+            Pole pierwsze = statek.getListaPol().get(0);
+            if(pole.getWsp_x() == pierwsze.getWsp_x()){
+                statek.setKierunek(pole.getWsp_x());
+                return pierwsze.getWsp_y() + 1 == pole.getWsp_y() || pierwsze.getWsp_y() - 1 == pole.getWsp_y();
+            }
+            else if(pole.getWsp_y() == pierwsze.getWsp_y()){
+                statek.setKierunek(pole.getWsp_y());
+                return pierwsze.getWsp_x() + 1 == pole.getWsp_x() || pierwsze.getWsp_x() - 1 == pole.getWsp_x();
+            }
+            else return false;
+        }
+        else{
+            int kierunek = statek.getKierunek();
+            int rozmiar = statek.getListaPol().size();
+            int[] tab = new int[rozmiar];
+            int min, max;
+            if(kierunek == pole.getWsp_x()){
+                for(int i = 0; i < rozmiar; i++){
+                    tab[i] = statek.getListaPol().get(i).getWsp_y();
+                }
+                Arrays.sort(tab);
+                min = tab[0];
+                max = tab[rozmiar - 1];
+                return min - 1 == pole.getWsp_y() || max + 1 == pole.getWsp_y();
+            }
+            else if(kierunek == pole.getWsp_y()){
+                for(int i = 0; i < rozmiar; i++){
+                    tab[i] = statek.getListaPol().get(i).getWsp_x();
+                }
+                Arrays.sort(tab);
+                min = tab[0];
+                max = tab[rozmiar - 1];
+                return min - 1 == pole.getWsp_x() || max + 1 == pole.getWsp_x();
+            }
+            else return false;
+        }
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton pom;
         Pole pole;
-        int poz;
         pom = (JButton) e.getSource();
         int id = Integer.parseInt(pom.getName());
         pole = planszaGracza.getListaPol().get(id - 1);
-        ArrayList<Pole> plansza = planszaGracza.getListaPol();
         if(hp < 3){
-            if(statek2.getListaPol().size() > 0 && plansza.get(id-2).getId() != id && plansza.get(id+2).getId() != id && plansza.get(id+11).getId() != id && plansza.get(id-11).getId() != id ) {
-                JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+            if(statek2.getListaPol().size() > 0) {
+                if(poprawnoscPola(statek2, pole)){
+                    pole.setStan(statek2.getId());
+                    statek2.dodajPole(pole);
+                    pom.setBackground(Color.GREEN);
+                    hp++;
+                }
+                else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
             }
             else {
                 pole.setStan(statek2.getId());
                 statek2.dodajPole(pole);
                 pom.setBackground(Color.GREEN);
-                if (hp == 2) komunikatLabel.setText("Ustaw pierwszy statek 3 - polowy");
                 hp++;
             }
+
+            if (hp == 3) komunikatLabel.setText("Ustaw pierwszy statek 3 - polowy");
         }
         else if(hp < 6){
-            pole.setStan(statek3_1.getId());
-            statek3_1.dodajPole(pole);
-            pom.setBackground(Color.GREEN);
-            if(hp == 5) komunikatLabel.setText("Ustaw drugi statek 3 - polowy");
-            hp++;
+            if(statek3_1.getListaPol().size() > 0) {
+                if(poprawnoscPola(statek3_1, pole)){
+                    pole.setStan(statek3_1.getId());
+                    statek3_1.dodajPole(pole);
+                    pom.setBackground(Color.GREEN);
+                    hp++;
+                }
+                else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+            }
+            else {
+                if(planszaGracza.getListaPol().get(pole.getId() - 1).getStan() != 0) JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+                else {
+                    pole.setStan(statek3_1.getId());
+                    statek3_1.dodajPole(pole);
+                    pom.setBackground(Color.GREEN);
+                    hp++;
+                }
+            }
+
+            if (hp == 6) komunikatLabel.setText("Ustaw drugi statek 3 - polowy");
         }
         else if(hp < 9){
-            pole.setStan(statek3_2.getId());
-            statek3_2.dodajPole(pole);
-            pom.setBackground(Color.GREEN);
-            if(hp == 8) komunikatLabel.setText("Ustaw statek 4 - polowy");
-            hp++;
+            if(statek3_2.getListaPol().size() > 0) {
+                if(poprawnoscPola(statek3_2, pole)){
+                    pole.setStan(statek3_2.getId());
+                    statek3_2.dodajPole(pole);
+                    pom.setBackground(Color.GREEN);
+                    hp++;
+                }
+                else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+            }
+            else {
+                if(planszaGracza.getListaPol().get(pole.getId() - 1).getStan() != 0) JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+                else {
+                    pole.setStan(statek3_2.getId());
+                    statek3_2.dodajPole(pole);
+                    pom.setBackground(Color.GREEN);
+                    hp++;
+                }
+            }
+            if (hp == 9) komunikatLabel.setText("Ustaw statek 4 - polowy");
         }
         else if(hp < 13){
-            pole.setStan(statek4.getId());
-            statek4.dodajPole(pole);
-            pom.setBackground(Color.GREEN);
-            if(hp == 12) komunikatLabel.setText("Ustaw statek 5 - polowy");
-            hp++;
+            if(statek4.getListaPol().size() > 0) {
+                if(poprawnoscPola(statek4, pole)){
+                    pole.setStan(statek4.getId());
+                    statek4.dodajPole(pole);
+                    pom.setBackground(Color.GREEN);
+                    hp++;
+                }
+                else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+            }
+            else {
+                if(planszaGracza.getListaPol().get(pole.getId() - 1).getStan() != 0) JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+                else {
+                    pole.setStan(statek4.getId());
+                    statek4.dodajPole(pole);
+                    pom.setBackground(Color.GREEN);
+                    hp++;
+                }
+            }
+            if(hp == 13) komunikatLabel.setText("Ustaw statek 5 - polowy");
         }
         else if (hp < 18){
-            pole.setStan(statek5.getId());
-            statek5.dodajPole(pole);
-            pom.setBackground(Color.GREEN);
-            if(hp == 17) komunikatLabel.setText("Zatwierdź ustawienia statków");
-            hp++;
+            if(statek5.getListaPol().size() > 0) {
+                if(poprawnoscPola(statek5, pole)){
+                    pole.setStan(statek5.getId());
+                    statek5.dodajPole(pole);
+                    pom.setBackground(Color.GREEN);
+                    hp++;
+                }
+                else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+
+            }
+            else {
+                if(planszaGracza.getListaPol().get(pole.getId() - 1).getStan() != 0) JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+                else {
+                    pole.setStan(statek5.getId());
+                    statek5.dodajPole(pole);
+                    pom.setBackground(Color.GREEN);
+                    hp++;
+                }
+            }
+            if(hp == 18) komunikatLabel.setText("Zatwierdź ustawienia statków");
         }
         else {
             System.out.println(id);

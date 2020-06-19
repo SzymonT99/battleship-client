@@ -4,21 +4,21 @@ import java.util.ArrayList;
 
 public class Statek {
     private Integer id;
-    private Integer hp;
+    private Integer dlugosc;
     private Integer kierunek;
     private ArrayList<Pole> listaPol = new ArrayList<>();
 
-    public Statek(Integer id, Integer hp) {
+    public Statek(Integer id, Integer dlugosc) {
         this.id = id;
-        this.hp = hp;
+        this.dlugosc = dlugosc;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public Integer getHp() {
-        return hp;
+    public Integer getDlugosc() {
+        return dlugosc;
     }
 
     public void dodajPole(Pole pole){
