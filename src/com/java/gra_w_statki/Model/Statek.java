@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class Statek {
     private Integer id;
     private Integer hp;
-    private ArrayList<Pole> listaPol;
+    private Integer kierunek;
+    private ArrayList<Pole> listaPol = new ArrayList<>();
 
     public Statek(Integer id, Integer hp) {
         this.id = id;
@@ -27,4 +28,13 @@ public class Statek {
     public ArrayList<Pole> getListaPol() {
         return listaPol;
     }
+
+    public Integer getKierunek() {
+        return kierunek;
+    }
+
+    public void setKierunek(Integer kierunek) {
+        this.kierunek = kierunek;
+    }
 }
+

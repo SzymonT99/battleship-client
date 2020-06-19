@@ -5,7 +5,10 @@ import java.util.ArrayList;
 public class Plansza {
     private Boolean turaWalki;
     private Integer liczbaStrzalow;
-    private ArrayList<Pole> listaPol;
+    private ArrayList<Pole> listaPol = new ArrayList<>();
+
+    public Plansza() {
+    }
 
     public Plansza(ArrayList<Pole> listaPol) {
         this.listaPol = listaPol;

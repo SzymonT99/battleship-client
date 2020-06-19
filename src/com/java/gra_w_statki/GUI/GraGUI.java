@@ -3,8 +3,10 @@ package com.java.gra_w_statki.GUI;
 import com.java.gra_w_statki.Kontrolery.HttpClientGET;
 import com.java.gra_w_statki.Model.Plansza;
 import com.java.gra_w_statki.Model.Pole;
+import com.java.gra_w_statki.Model.Statek;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -118,6 +120,12 @@ public class GraGUI extends JFrame implements ActionListener{
 
     private HttpClientGET klient = new HttpClientGET();
     private Plansza planszaGracza;
+    private Statek statek2 = new Statek(1, 2);
+    private Statek statek3_1 = new Statek(2, 3);
+    private Statek statek3_2 = new Statek(3, 3);
+    private Statek statek4 = new Statek(4, 4);
+    private Statek statek5 = new Statek(5, 5);
+    private Integer hp = 0;
 
 
     public GraGUI() {
@@ -133,19 +141,31 @@ public class GraGUI extends JFrame implements ActionListener{
         int i = 0;
         for(JButton button : tabPrzyciskow){
             if(i < 10) {
-                for (int j = 0; j < 10; j++) {
+                for (int j = 1; j < 10; j++) {
                     String tmp = String.valueOf(i) + String.valueOf(j);
                     polaPlanszy.add(new Pole(Integer.parseInt(tmp), 0));
                 }
+                polaPlanszy.add(new Pole(Integer.parseInt(String.valueOf(i + 1) + String.valueOf(0)), 0));
             }
             i++;
             button.setName(String.valueOf(i));
             button.addActionListener(this);
+            //System.out.println("id: " + polaPlanszy.get(i-1).getId() + " x: " + polaPlanszy.get(i-1).getWsp_x()+ " y: " + polaPlanszy.get(i-1).getWsp_y());
         }
         planszaGracza = new Plansza(polaPlanszy);
 
 
-
+        ustawStatkiButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(hp < 17){
+                    komunikatLabel.setText("Ustaw statek 2 - polowy");
+                }
+                else{
+                    komunikatLabel.setText("Wykonaj strzał");
+                }
+            }
+        });
     }
     private void createUIComponents() {
         // TODO: place custom component creation code here
@@ -155,11 +175,57 @@ public class GraGUI extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton pom;
+        Pole pole;
+        int poz;
         pom = (JButton) e.getSource();
         int id = Integer.parseInt(pom.getName());
-        System.out.println(id);
-        System.out.println("Stan pola: " + planszaGracza.getListaPol().get(id-1).getStan());
-        klient.wykonajStrzal(id);
+        pole = planszaGracza.getListaPol().get(id - 1);
+        ArrayList<Pole> plansza = planszaGracza.getListaPol();
+        if(hp < 3){
+            if(statek2.getListaPol().size() > 0 && plansza.get(id-2).getId() != id && plansza.get(id+2).getId() != id && plansza.get(id+11).getId() != id && plansza.get(id-11).getId() != id ) {
+                JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+            }
+            else {
+                pole.setStan(statek2.getId());
+                statek2.dodajPole(pole);
+                pom.setBackground(Color.GREEN);
+                if (hp == 2) komunikatLabel.setText("Ustaw pierwszy statek 3 - polowy");
+                hp++;
+            }
+        }
+        else if(hp < 6){
+            pole.setStan(statek3_1.getId());
+            statek3_1.dodajPole(pole);
+            pom.setBackground(Color.GREEN);
+            if(hp == 5) komunikatLabel.setText("Ustaw drugi statek 3 - polowy");
+            hp++;
+        }
+        else if(hp < 9){
+            pole.setStan(statek3_2.getId());
+            statek3_2.dodajPole(pole);
+            pom.setBackground(Color.GREEN);
+            if(hp == 8) komunikatLabel.setText("Ustaw statek 4 - polowy");
+            hp++;
+        }
+        else if(hp < 13){
+            pole.setStan(statek4.getId());
+            statek4.dodajPole(pole);
+            pom.setBackground(Color.GREEN);
+            if(hp == 12) komunikatLabel.setText("Ustaw statek 5 - polowy");
+            hp++;
+        }
+        else if (hp < 18){
+            pole.setStan(statek5.getId());
+            statek5.dodajPole(pole);
+            pom.setBackground(Color.GREEN);
+            if(hp == 17) komunikatLabel.setText("Zatwierdź ustawienia statków");
+            hp++;
+        }
+        else {
+            System.out.println(id);
+            System.out.println("Stan pola: " + planszaGracza.getListaPol().get(id - 1).getStan() + " x: " + planszaGracza.getListaPol().get(id - 1).getWsp_x() + " y: " + planszaGracza.getListaPol().get(id - 1).getWsp_y());
+            klient.wykonajStrzal(id);
+        }
 
     }
 

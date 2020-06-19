@@ -13,10 +13,8 @@ public class HttpClientGET {
 
     public void wykonajStrzal(int id_pola) {
 
-        System.out.println("jestem");
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet("http://127.0.0.1:8080/api/statki/strzelaj/" + id_pola);
-        System.out.println(request);
         Gson gson = new Gson();
 
         try {
