@@ -5,14 +5,15 @@ import java.util.ArrayList;
 public class Statek {
     private Integer id;
     private Integer dlugosc;
-    private Integer hp;
     private char kierunek;
     private ArrayList<Pole> listaPol = new ArrayList<>();
+
+    public Statek() {
+    }
 
     public Statek(Integer id, Integer dlugosc) {
         this.id = id;
         this.dlugosc = dlugosc;
-        this.hp = dlugosc;
     }
 
     public Integer getId() {
@@ -35,16 +36,16 @@ public class Statek {
         return kierunek;
     }
 
-    public Integer getHp() {
-        return hp;
-    }
-
     public void setKierunek(char kierunek) {
         this.kierunek = kierunek;
     }
 
-    public void zmniejszHp() {
-        this.hp = this.hp - 1;
+    public void trafienie(Integer idPola) {
+        getListaPol().get(idPola).setStan(99);
+    }
+
+    public void zatopienie(){
+        listaPol.clear();
     }
 }
 
