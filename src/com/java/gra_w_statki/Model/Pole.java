@@ -57,4 +57,14 @@ public class Pole {
     public void setStan(Integer stan) {
         this.stan = stan;
     }
+
+    @Override
+    public String toString() {
+        return "Pole{" +
+                "id='" + id + '\'' +
+                ", wsp_x='" + wsp_x + '\'' +
+                ", wsp_y='" + wsp_y + '\'' +
+                ", stan='" + stan + '\'' +
+                '}';
+    }
 }

@@ -44,10 +44,9 @@ public class Statek {
         int id;
         for (int i = 0; i < getDlugosc(); i++){
             id = listaPol.get(i).getId();
-            System.out.println("w statku id pola statku: " + id);
             if (id == idPolaTrafionego){
                 listaPol.get(i).setStan(99);
-                System.out.println("Z klasy statek" + listaPol.get(i).getStan());
+                System.out.println("Z klasy statek " + listaPol.get(i).getStan());
             }
         }
     }
