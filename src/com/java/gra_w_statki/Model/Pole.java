@@ -6,6 +6,9 @@ public class Pole {
     private Integer wsp_y;
     private Integer stan;
 
+    public Pole() {
+    }
+
     public Pole(Integer id, Integer stan) {
         this.id = id;
         this.stan = stan;

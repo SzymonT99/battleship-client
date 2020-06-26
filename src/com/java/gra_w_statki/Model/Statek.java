@@ -40,12 +40,21 @@ public class Statek {
         this.kierunek = kierunek;
     }
 
-    public void trafienie(Integer idPola) {
-        getListaPol().get(idPola).setStan(99);
+    public void trafienie(Integer idPolaTrafionego) {
+        int id;
+        for (int i = 0; i < getDlugosc(); i++){
+            id = listaPol.get(i).getId();
+            System.out.println("w statku id pola statku: " + id);
+            if (id == idPolaTrafionego){
+                listaPol.get(i).setStan(99);
+                System.out.println("Z klasy statek" + listaPol.get(i).getStan());
+            }
+        }
     }
 
     public void zatopienie(){
         listaPol.clear();
+        listaPol = null;
     }
 }
 

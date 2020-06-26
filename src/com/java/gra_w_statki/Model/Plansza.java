@@ -6,6 +6,7 @@ public class Plansza {
     private Boolean turaWalki;
     private Integer liczbaStrzalow;
     private ArrayList<Pole> listaPol = new ArrayList<>();
+    private ArrayList<Statek> listaStatkow = new ArrayList<>();
 
     public Plansza() {
     }
@@ -25,6 +26,10 @@ public class Plansza {
 
     public ArrayList<Pole> getListaPol() {
         return listaPol;
+    }
+
+    public ArrayList<Statek> getListaStatkow() {
+        return listaStatkow;
     }
 
     public void setTuraWalki(Boolean turaWalki) {

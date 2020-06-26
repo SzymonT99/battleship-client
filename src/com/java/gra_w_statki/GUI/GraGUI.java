@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 public class GraGUI extends JFrame implements ActionListener {
     private JButton b12;
@@ -127,11 +128,17 @@ public class GraGUI extends JFrame implements ActionListener {
     private Plansza planszaGracza;
     private Plansza planszaPrzeciwnika;
     private Statek statek2 = new Statek(1, 2);
+    private Statek statek2p = new Statek(1, 2);
     private Statek statek3_1 = new Statek(2, 3);
+    private Statek statek3_1p = new Statek(2, 3);
     private Statek statek3_2 = new Statek(3, 3);
+    private Statek statek3_2p = new Statek(3, 3);
     private Statek statek4 = new Statek(4, 4);
+    private Statek statek4p = new Statek(4, 4);
     private Statek statek5 = new Statek(5, 5);
+    private Statek statek5p = new Statek(5, 5);
     private Integer hp = 0;
+    private Integer runda = 0;          // runda = 0 gdy jest kolejka gracza a gdy runda = 1 to jest kolejka przeciwnika
 
 
     public GraGUI() {
@@ -160,6 +167,12 @@ public class GraGUI extends JFrame implements ActionListener {
             //System.out.println("id: " + polaPlanszy.get(i-1).getId() + " x: " + polaPlanszy.get(i-1).getWsp_x()+ " y: " + polaPlanszy.get(i-1).getWsp_y());
         }
         planszaGracza = new Plansza(polaPlanszyGracza);
+        planszaPrzeciwnika = new Plansza(polaPlanszyPrzeciwnika);
+        planszaPrzeciwnika.getListaStatkow().add(statek2p);
+        planszaPrzeciwnika.getListaStatkow().add(statek3_1p);
+        planszaPrzeciwnika.getListaStatkow().add(statek3_2p);
+        planszaPrzeciwnika.getListaStatkow().add(statek4p);
+        planszaPrzeciwnika.getListaStatkow().add(statek5p);
 
 
         ustawStatkiButton.addActionListener(new ActionListener() {
@@ -167,12 +180,11 @@ public class GraGUI extends JFrame implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 if (hp == 0) {
                     komunikatLabel.setText("Ustaw statek 2 - polowy");
-                }
-                else if (hp < 17){
+                } else if (hp < 17) {
                     JOptionPane.showMessageDialog(mainPanel, "Nie ustawiono wszystkich statków");
-                }
-                else {
+                } else {
                     hp = 18;        // hp = 18 gdy statki zostały już ustawione
+                    ustawPlansze(planszaPrzeciwnika, 1);
                     komunikatLabel.setText("Wykonaj strzał");
                 }
             }
@@ -196,11 +208,11 @@ public class GraGUI extends JFrame implements ActionListener {
                     hp = hp - rozmiar;
                     statek.getListaPol().clear();
                     ustawPlansze(planszaGracza, 0);
-                    if(hp == 0)  komunikatLabel.setText("Ustaw statek 2 - polowy");
-                    else if(hp == 2) komunikatLabel.setText("Ustaw pierwszy statek 3 - polowy");
-                    else if(hp == 5) komunikatLabel.setText("Ustaw drugi statek 3 - polowy");
-                    else if(hp == 8) komunikatLabel.setText("Ustaw statek 4 - polowy");
-                    else if(hp == 12) komunikatLabel.setText("Ustaw statek 5 - polowy");
+                    if (hp == 0) komunikatLabel.setText("Ustaw statek 2 - polowy");
+                    else if (hp == 2) komunikatLabel.setText("Ustaw pierwszy statek 3 - polowy");
+                    else if (hp == 5) komunikatLabel.setText("Ustaw drugi statek 3 - polowy");
+                    else if (hp == 8) komunikatLabel.setText("Ustaw statek 4 - polowy");
+                    else if (hp == 12) komunikatLabel.setText("Ustaw statek 5 - polowy");
                 }
             }
         });
@@ -251,31 +263,98 @@ public class GraGUI extends JFrame implements ActionListener {
         }
     }
 
-    private void aktualizujPlansze(Plansza plansza, Pole pole){
-        int idPola = pole.getId();
-        int nowyStan = pole.getStan();
-        plansza.getListaPol().get(idPola - 1).setStan(nowyStan);
+    private void badajStrzal(Pole ustrzelonePole, Plansza plansza) {
+        Integer stanPola = ustrzelonePole.getStan();
+        Integer idPola = ustrzelonePole.getId();
+        if (stanPola > 5) komunikatLabel.setText("Na to pole już został oddany strzał - zmarnowana kolejka");
+        else if (stanPola == 0) {
+            komunikatLabel.setText("Pudło!");
+            plansza.getListaPol().get(idPola - 1).setStan(11);
+        } else {
+            Statek trafionyStatek;
+            if (stanPola == 1) trafionyStatek = plansza.getListaStatkow().get(0);
+            else if (stanPola == 2) trafionyStatek = plansza.getListaStatkow().get(1);
+            else if (stanPola == 3) trafionyStatek = plansza.getListaStatkow().get(2);
+            else if (stanPola == 4) trafionyStatek = plansza.getListaStatkow().get(3);
+            else trafionyStatek = plansza.getListaStatkow().get(4);
+
+            Integer wyznacznikZatopienia = 0;
+            System.out.println(trafionyStatek.getListaPol().size() + "******" + trafionyStatek.getDlugosc());
+            if (trafionyStatek.getListaPol().size() == trafionyStatek.getDlugosc() - 1) {
+                for (int i = 0; i < trafionyStatek.getDlugosc() - 1; i++) {
+                    wyznacznikZatopienia += trafionyStatek.getListaPol().get(i).getStan();
+
+                }
+                wyznacznikZatopienia /= trafionyStatek.getDlugosc() - 1;
+            }
+
+            if (wyznacznikZatopienia == 99) {
+                komunikatLabel.setText("Trafiony zatopiony!");
+                for (int i = 0; i < trafionyStatek.getDlugosc() - 1; i++) {
+                    plansza.getListaPol().get(trafionyStatek.getListaPol().get(i).getId() - 1).setStan(999);
+                }
+                plansza.getListaPol().get(idPola - 1).setStan(999);
+                trafionyStatek.zatopienie();        //zatopienie statku - wyczyszenie listy Pol statku
+            } else {
+                komunikatLabel.setText("Trafiony!");
+                if (plansza == planszaGracza) {
+                    trafionyStatek.trafienie(idPola);
+                    plansza.getListaPol().get(idPola - 1).setStan(99);
+                } else {
+                    ustrzelonePole.setStan(99);
+                    trafionyStatek.dodajPole(ustrzelonePole);
+                    plansza.getListaPol().get(idPola - 1).setStan(99);
+                }
+            }
+        }
     }
+
+    private void blokowaniePol(Boolean tryb) {
+        for (JButton button : tabPrzyciskow) {
+            button.setEnabled(tryb);
+        }
+    }
+
+    private void trwanieKolejki(Integer sekundy) {
+        try {
+            TimeUnit.SECONDS.sleep(sekundy);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
 
     private void ustawPlansze(Plansza plansza, Integer rola) {   // rola = 0 gdy plansza gracza
         Pole pole;                                              // rola = 1 gdy plansza przeciwnika
         JButton button;
+        System.out.println("ustawiam plansze");
         for (int i = 0; i < tabPrzyciskow.length; i++) {
             pole = plansza.getListaPol().get(i);
             button = tabPrzyciskow[i];
             if (pole.getStan() == 0) {
                 button.setBackground(new java.awt.Color(21, 122, 227));
-            } else if (pole.getStan() >= 1 || pole.getStan() <= 5) {
+            } else if (pole.getStan() >= 1 && pole.getStan() <= 5) {
                 if (rola == 0) button.setBackground(Color.GREEN);
-                else button.setBackground(new java.awt.Color(21, 122, 227));
+                else button.setBackground(Color.RED);
             } else if (pole.getStan() == 11) {                     // stan = 11 gdy na pole padł niecelny strzał(pudło)
                 button.setBackground(Color.GRAY);
-            } else if (pole.getStan() == 99){                      // stan = 99 gdy trafiono w statek
+            } else if (pole.getStan() == 99) {                      // stan = 99 gdy trafiono w statek
                 button.setBackground(Color.ORANGE);
-            } else{                                                // stan = 999 gdy statek zatopiony
+            } else {                                                // stan = 999 gdy statek zatopiony
                 button.setBackground(Color.BLACK);
             }
         }
+    }
+
+    private Boolean sprawdzStatki(Plansza plansza) {
+        int i = 0;
+        for (Statek statek : plansza.getListaStatkow()) {
+            if (statek.getListaPol() == null) {
+                i++;
+            }
+        }
+        if (i == 5) return false;
+        else return true;
     }
 
 
@@ -292,8 +371,7 @@ public class GraGUI extends JFrame implements ActionListener {
                 statek2.dodajPole(pole);
                 pom.setBackground(Color.GREEN);
                 hp++;
-            }
-            else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+            } else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
 
             if (hp == 2) komunikatLabel.setText("Ustaw pierwszy statek 3 - polowy");
         } else if (hp < 5) {
@@ -302,8 +380,7 @@ public class GraGUI extends JFrame implements ActionListener {
                 statek3_1.dodajPole(pole);
                 pom.setBackground(Color.GREEN);
                 hp++;
-            }
-            else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+            } else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
 
             if (hp == 5) komunikatLabel.setText("Ustaw drugi statek 3 - polowy");
         } else if (hp < 8) {
@@ -312,8 +389,7 @@ public class GraGUI extends JFrame implements ActionListener {
                 statek3_2.dodajPole(pole);
                 pom.setBackground(Color.GREEN);
                 hp++;
-            }
-            else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+            } else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
 
             if (hp == 8) komunikatLabel.setText("Ustaw statek 4 - polowy");
         } else if (hp < 12) {
@@ -322,8 +398,7 @@ public class GraGUI extends JFrame implements ActionListener {
                 statek4.dodajPole(pole);
                 pom.setBackground(Color.GREEN);
                 hp++;
-            }
-            else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+            } else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
 
             if (hp == 12) komunikatLabel.setText("Ustaw statek 5 - polowy");
         } else if (hp < 17) {
@@ -332,16 +407,38 @@ public class GraGUI extends JFrame implements ActionListener {
                 statek5.dodajPole(pole);
                 pom.setBackground(Color.GREEN);
                 hp++;
-            }
-            else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
+            } else JOptionPane.showMessageDialog(mainPanel, "Błędne ustawienie");
 
-            if (hp == 17) komunikatLabel.setText("Zatwierdź ustawienia statków");
+            if (hp == 17) {
+                planszaGracza.getListaStatkow().add(statek2);
+                planszaGracza.getListaStatkow().add(statek3_1);
+                planszaGracza.getListaStatkow().add(statek3_2);
+                planszaGracza.getListaStatkow().add(statek4);
+                planszaGracza.getListaStatkow().add(statek5);
+                komunikatLabel.setText("Zatwierdź ustawienia statków");
+            }
 
 
         } else {
-            System.out.println(id);
-            System.out.println("Stan pola: " + planszaGracza.getListaPol().get(id - 1).getStan() + " x: " + planszaGracza.getListaPol().get(id - 1).getWsp_x() + " y: " + planszaGracza.getListaPol().get(id - 1).getWsp_y());
-            klient.wykonajStrzal(id);
+            //System.out.println(id);
+            //System.out.println("Stan pola: " + planszaGracza.getListaPol().get(id - 1).getStan() + " x: " + planszaGracza.getListaPol().get(id - 1).getWsp_x() + " y: " + planszaGracza.getListaPol().get(id - 1).getWsp_y());
+
+            Pole polePrzeciwnika = klient.wykonajStrzal(id);
+            badajStrzal(polePrzeciwnika, planszaPrzeciwnika);
+            ustawPlansze(planszaPrzeciwnika, 1);
+//            blokowaniePol(false);
+//            trwanieKolejki(6);
+//
+//            ustawPlansze(planszaGracza, 0);
+//            trwanieKolejki(6);
+//            Integer idAtakowanegoPola = klient.otrzymajStrzal();
+//            Pole atakowanePole = planszaGracza.getListaPol().get(idAtakowanegoPola - 1);
+//            badajStrzal(atakowanePole, planszaGracza);
+//            ustawPlansze(planszaGracza, 0);
+//            trwanieKolejki(6);
+//
+//            blokowaniePol(true);
+
         }
 
     }
