@@ -1,6 +1,6 @@
 package com.java.gra_w_statki;
 
-import com.java.gra_w_statki.GUI.GraGUI;
+import com.java.gra_w_statki.GUI.MenuGlowneGUI;
 
 import javax.swing.*;
 
@@ -10,8 +10,8 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                GraGUI graGUI = new GraGUI();
-                graGUI.setVisible(true);
+                MenuGlowneGUI menuGlowneGUI = new MenuGlowneGUI();
+                menuGlowneGUI.setVisible(true);
             }
         });
     }

@@ -284,15 +284,22 @@ public class GraGUI extends JFrame implements ActionListener {
             else if (stanPola == 4) trafionyStatek = plansza.getListaStatkow().get(3);
             else trafionyStatek = plansza.getListaStatkow().get(4);
 
-            Integer wyznacznikZatopienia = 0;
-            if (trafionyStatek.getListaPol().size() == trafionyStatek.getDlugosc() - 1) {
-                for (int i = 0; i < trafionyStatek.getDlugosc() - 1; i++) {
-                    wyznacznikZatopienia += trafionyStatek.getListaPol().get(i).getStan();
+            Integer dlugoscStatku = trafionyStatek.getDlugosc();
+            int licznikTrafien = 0;
+            if (trafionyStatek.getListaPol().size() > trafionyStatek.getDlugosc() - 2) {
+                if (plansza == planszaGracza) {
+                    for (int i = 0; i < trafionyStatek.getDlugosc(); i++) {
+                        if (trafionyStatek.getListaPol().get(i).getStan() == 99) licznikTrafien++;
+                    }
                 }
-                wyznacznikZatopienia /= trafionyStatek.getDlugosc() - 1;
+                else{
+                    for (int i = 0; i < trafionyStatek.getDlugosc() - 1; i++) {
+                        if (trafionyStatek.getListaPol().get(i).getStan() == 99) licznikTrafien++;
+                    }
+                }
             }
 
-            if (wyznacznikZatopienia == 99) {
+            if (licznikTrafien == dlugoscStatku - 1) {
                 komunikatLabel.setText("Trafiony zatopiony!");
                 for (int i = 0; i < trafionyStatek.getDlugosc() - 1; i++) {
                     plansza.getListaPol().get(trafionyStatek.getListaPol().get(i).getId() - 1).setStan(999);
@@ -303,6 +310,8 @@ public class GraGUI extends JFrame implements ActionListener {
                 komunikatLabel.setText("Trafiony!");
                 if (plansza == planszaGracza) {
                     trafionyStatek.trafienie(idPola);
+
+
                     plansza.getListaPol().get(idPola - 1).setStan(99);
                 } else {                           // w przypadku planszy przeciwnika po każdym celnym strzale - takie pole jest do statku dodawane
                     ustrzelonePole.setStan(99);
@@ -360,7 +369,7 @@ public class GraGUI extends JFrame implements ActionListener {
                 startOdliczania++;
                 System.out.println(startOdliczania);
                 okreslRuchy();
-                if (startOdliczania == 14) {
+                if (startOdliczania == 6) {
                     timer.cancel();
                     startOdliczania = 0;
                 }
@@ -369,18 +378,18 @@ public class GraGUI extends JFrame implements ActionListener {
     }
 
     private void okreslRuchy() {
-        if (startOdliczania == 5) {
+        if (startOdliczania == 2) {
             komunikatLabel.setText("...");
             turaGryLabel.setText("Tura obrony - przeciwnik atakuje");
             ustawPlansze(planszaGracza, 0);
-        } else if (startOdliczania == 9) {
+        } else if (startOdliczania == 4) {
             Integer idAtakowanegoPola = klientGET.otrzymajStrzal();
             Pole atakowanePole = planszaGracza.getListaPol().get(idAtakowanegoPola - 1);
             klientPOST.odpowiedzNaStrzal(atakowanePole);
             badajStrzal(atakowanePole, planszaGracza);
             ustawPlansze(planszaGracza, 0);
             if (!sprawdzStatki(planszaGracza)) komunikatLabel.setText("NIESTETY PRZECIWNIK WYGRAŁ");
-        } else if (startOdliczania == 14) {
+        } else if (startOdliczania == 6) {
             blokowaniePol(true);
             ustawPlansze(planszaPrzeciwnika, 1);
             turaGryLabel.setText("Tura ataku - do ataku!");
@@ -453,7 +462,7 @@ public class GraGUI extends JFrame implements ActionListener {
             ustawPlansze(planszaPrzeciwnika, 1);
             blokowaniePol(false);
             if (!sprawdzStatki(planszaPrzeciwnika)) komunikatLabel.setText("GRATULACJE WYGRANO GRE");
-            turaPrzeciwnika();
+            else turaPrzeciwnika();
         }
 
     }

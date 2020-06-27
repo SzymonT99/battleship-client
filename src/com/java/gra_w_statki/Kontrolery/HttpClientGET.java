@@ -48,14 +48,16 @@ public class HttpClientGET {
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet("http://127.0.0.1:8080/api/statki/obrona");
         Gson gson = new Gson();
-        String idAtakowanegoPola = "";
+        Pole pom = new Pole();
+        Integer idAtakowanegoPola = 0;
 
         try {
             HttpResponse response = client.execute(request);
             HttpEntity entity = response.getEntity();
-            String responseString = EntityUtils.toString(entity, "UTF-8");
-            System.out.println(responseString);
-            idAtakowanegoPola = responseString;
+            String json = EntityUtils.toString(entity);
+            pom = gson.fromJson(json, Pole.class);
+            idAtakowanegoPola = pom.getId();
+            System.out.println("Atak przeciwnika na id Pola: " + idAtakowanegoPola);
 
             System.out.println("Kod odpowiedzi serwera: " + response.getStatusLine().getStatusCode());
             if (response.getStatusLine().getStatusCode() == 404) {
@@ -67,6 +69,6 @@ public class HttpClientGET {
             System.out.println("Houston, we have a problem with GET");
             var.printStackTrace();
         }
-        return Integer.parseInt(idAtakowanegoPola);
+        return idAtakowanegoPola;
     }
 }

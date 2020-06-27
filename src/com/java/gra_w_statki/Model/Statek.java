@@ -46,7 +46,6 @@ public class Statek {
             id = listaPol.get(i).getId();
             if (id == idPolaTrafionego){
                 listaPol.get(i).setStan(99);
-                System.out.println("Z klasy statek " + listaPol.get(i).getStan());
             }
         }
     }
