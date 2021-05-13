@@ -71,4 +71,97 @@ public class HttpClientGET {
         }
         return idAtakowanegoPola;
     }
+
+
+    public void ustawTryb(Integer tryb) {
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet("http://127.0.0.1:8080/api/statki/wybor_trybu/" + tryb);
+        try {
+            HttpResponse response = client.execute(request);
+            HttpEntity entity = response.getEntity();
+
+            System.out.println("Kod odpowiedzi serwera: " + response.getStatusLine().getStatusCode());
+            if (response.getStatusLine().getStatusCode() == 404) {
+                System.out.println("Błąd");
+            } else if (response.getStatusLine().getStatusCode() == 200) {
+                System.out.println("OK");
+            }
+        } catch (IOException var) {
+            System.out.println("Houston, we have a problem with GET");
+            var.printStackTrace();
+        }
+
+    }
+
+    public Integer sprzwdzTrybSerwera() {
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet("http://127.0.0.1:8080/api/statki/sprawdz_tryb");
+        String responseString = "";
+
+        try {
+            HttpResponse response = client.execute(request);
+            HttpEntity entity = response.getEntity();
+            responseString = EntityUtils.toString(entity, "UTF-8");
+
+            System.out.println("Kod odpowiedzi serwera: " + response.getStatusLine().getStatusCode());
+            if (response.getStatusLine().getStatusCode() == 404) {
+                System.out.println("Błąd");
+            } else if (response.getStatusLine().getStatusCode() == 200) {
+                System.out.println("OK");
+            }
+        } catch (IOException var) {
+            System.out.println("Houston, we have a problem with GET");
+            var.printStackTrace();
+        }
+        return Integer.valueOf(responseString);
+    }
+
+    public void wyślijNazweGracza(String nazwa) {
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet("http://127.0.0.1:8080/api/statki/nazwa/" + nazwa);
+
+        try {
+            HttpResponse response = client.execute(request);
+            HttpEntity entity = response.getEntity();
+
+            System.out.println("Kod odpowiedzi serwera: " + response.getStatusLine().getStatusCode());
+            if (response.getStatusLine().getStatusCode() == 404) {
+                System.out.println("Błąd");
+            } else if (response.getStatusLine().getStatusCode() == 200) {
+                System.out.println("OK");
+            }
+        } catch (IOException var) {
+            System.out.println("Houston, we have a problem with GET");
+            var.printStackTrace();
+        }
+    }
+
+    public String pobierzNazweGracza() {
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet("http://127.0.0.1:8080/api/statki/pobierz_nazwe");
+        String responseString = "";
+
+        try {
+            HttpResponse response = client.execute(request);
+            HttpEntity entity = response.getEntity();
+            responseString = EntityUtils.toString(entity, "UTF-8");
+
+            System.out.println("Kod odpowiedzi serwera: " + response.getStatusLine().getStatusCode());
+            if (response.getStatusLine().getStatusCode() == 404) {
+                System.out.println("Błąd");
+            } else if (response.getStatusLine().getStatusCode() == 200) {
+                System.out.println("OK");
+            }
+        } catch (IOException var) {
+            System.out.println("Houston, we have a problem with GET");
+            var.printStackTrace();
+        }
+        return responseString;
+    }
+
+
 }

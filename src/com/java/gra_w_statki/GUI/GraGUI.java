@@ -2,6 +2,7 @@ package com.java.gra_w_statki.GUI;
 
 import com.java.gra_w_statki.Kontrolery.HttpClientGET;
 import com.java.gra_w_statki.Kontrolery.HttpClientPOST;
+import com.java.gra_w_statki.Model.Gracz;
 import com.java.gra_w_statki.Model.Plansza;
 import com.java.gra_w_statki.Model.Pole;
 import com.java.gra_w_statki.Model.Statek;
@@ -121,28 +122,23 @@ public class GraGUI extends JFrame implements ActionListener {
             b76, b77, b78, b79, b80, b81, b82, b83, b84, b85, b86, b87, b88, b89, b90, b91, b92, b93, b94, b95, b96, b97, b98, b99, b100};
     private JButton ustawStatkiButton;
     private JButton wyjdzZGryButton;
-    private JButton przerwijGreButton;
     private JPanel mainPanel;
     private JLabel komunikatLabel;
     private JButton cofnijStatekButton;
     private JLabel turaGryLabel;
+    private JLabel nazwaLabel;
+    private JLabel nazwaGraczaLabel;
 
     private HttpClientGET klientGET = new HttpClientGET();
     private HttpClientPOST klientPOST = new HttpClientPOST();
     private Plansza planszaGracza;
     private Plansza planszaPrzeciwnika;
     private Statek statek2 = new Statek(1, 2);
-    private Statek statek2p = new Statek(1, 2);
     private Statek statek3_1 = new Statek(2, 3);
-    private Statek statek3_1p = new Statek(2, 3);
     private Statek statek3_2 = new Statek(3, 3);
-    private Statek statek3_2p = new Statek(3, 3);
     private Statek statek4 = new Statek(4, 4);
-    private Statek statek4p = new Statek(4, 4);
     private Statek statek5 = new Statek(5, 5);
-    private Statek statek5p = new Statek(5, 5);
     private Integer hp = 0;
-    private Integer runda = 0;          // runda = 0 gdy jest kolejka gracza a gdy runda = 1 to jest kolejka przeciwnika
     private Integer startOdliczania = 0;
 
 
@@ -151,6 +147,11 @@ public class GraGUI extends JFrame implements ActionListener {
         setTitle("Gra w statki");
         setBounds(540, 150, 920, 730);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        Gracz gracz = new Gracz(klientGET.pobierzNazweGracza());
+        nazwaGraczaLabel.setText(gracz.getName());
+
+        blokowaniePol(false);
 
         ArrayList<Pole> polaPlanszyGracza = new ArrayList<>();
         ArrayList<Pole> polaPlanszyPrzeciwnika = new ArrayList<>();
@@ -169,14 +170,18 @@ public class GraGUI extends JFrame implements ActionListener {
             i++;
             button.setName(String.valueOf(i));
             button.addActionListener(this);
-            //System.out.println("id: " + polaPlanszy.get(i-1).getId() + " x: " + polaPlanszy.get(i-1).getWsp_x()+ " y: " + polaPlanszy.get(i-1).getWsp_y());
         }
         planszaGracza = new Plansza(polaPlanszyGracza);
         planszaPrzeciwnika = new Plansza(polaPlanszyPrzeciwnika);
+        Statek statek2p = new Statek(1, 2);
         planszaPrzeciwnika.getListaStatkow().add(statek2p);
+        Statek statek3_1p = new Statek(2, 3);
         planszaPrzeciwnika.getListaStatkow().add(statek3_1p);
+        Statek statek3_2p = new Statek(3, 3);
         planszaPrzeciwnika.getListaStatkow().add(statek3_2p);
+        Statek statek4p = new Statek(4, 4);
         planszaPrzeciwnika.getListaStatkow().add(statek4p);
+        Statek statek5p = new Statek(5, 5);
         planszaPrzeciwnika.getListaStatkow().add(statek5p);
 
 
@@ -184,11 +189,15 @@ public class GraGUI extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (hp == 0) {
+                    blokowaniePol(true);
                     komunikatLabel.setText("Ustaw statek 2 - polowy");
                 } else if (hp < 17) {
                     JOptionPane.showMessageDialog(mainPanel, "Nie ustawiono wszystkich statków");
-                } else {
-                    hp = 18;        // hp = 18 gdy statki zostały już ustawione
+                } else if (hp == 18){
+                    JOptionPane.showMessageDialog(mainPanel, "Statki zostały już ustawione");
+                }
+                else {
+                    hp = 18;                // hp = 18 gdy statki zostały już ustawione
                     ustawPlansze(planszaPrzeciwnika, 1);
                     komunikatLabel.setText("Wykonaj strzał");
                     turaGryLabel.setText("Tura ataku - do ataku!");
@@ -220,6 +229,13 @@ public class GraGUI extends JFrame implements ActionListener {
                     else if (hp == 8) komunikatLabel.setText("Ustaw statek 4 - polowy");
                     else if (hp == 12) komunikatLabel.setText("Ustaw statek 5 - polowy");
                 }
+            }
+        });
+        wyjdzZGryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                klientGET.ustawTryb(0);         // przywrócenie trybu początkowego serwera
+                System.exit(0);
             }
         });
     }
@@ -302,18 +318,18 @@ public class GraGUI extends JFrame implements ActionListener {
             if (licznikTrafien == dlugoscStatku - 1) {
                 komunikatLabel.setText("Trafiony zatopiony!");
                 for (int i = 0; i < trafionyStatek.getDlugosc() - 1; i++) {
-                    plansza.getListaPol().get(trafionyStatek.getListaPol().get(i).getId() - 1).setStan(999);
+                    if(plansza == planszaPrzeciwnika) plansza.getListaPol().get(trafionyStatek.getListaPol().get(i).getId() - 1).setStan(999);
+                    else plansza.getListaPol().get(trafionyStatek.getListaPol().get(i).getId() - 1).setStan(99);
                 }
-                plansza.getListaPol().get(idPola - 1).setStan(999);
-                trafionyStatek.zatopienie();        //zatopienie statku - wyczyszenie listy Pol statku
+                if(plansza == planszaPrzeciwnika) plansza.getListaPol().get(idPola - 1).setStan(999);
+                else plansza.getListaPol().get(idPola - 1).setStan(99);
+                    trafionyStatek.zatopienie();                //zatopienie statku - wyczyszenie listy Pol statku
             } else {
                 komunikatLabel.setText("Trafiony!");
                 if (plansza == planszaGracza) {
                     trafionyStatek.trafienie(idPola);
-
-
                     plansza.getListaPol().get(idPola - 1).setStan(99);
-                } else {                           // w przypadku planszy przeciwnika po każdym celnym strzale - takie pole jest do statku dodawane
+                } else {                                // w przypadku planszy przeciwnika po każdym celnym strzale - takie pole jest do statku dodawane
                     ustrzelonePole.setStan(99);
                     trafionyStatek.dodajPole(ustrzelonePole);
                     plansza.getListaPol().get(idPola - 1).setStan(99);

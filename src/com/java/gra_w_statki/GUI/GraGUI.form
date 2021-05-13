@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="14" column-count="14" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="0">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="27" y="14" width="914" height="701"/>
+      <xy x="27" y="14" width="931" height="701"/>
     </constraints>
     <properties>
       <enabled value="true"/>
@@ -1590,22 +1590,6 @@
           <verticalTextPosition value="0"/>
         </properties>
       </component>
-      <component id="5780c" class="javax.swing.JButton" binding="przerwijGreButton">
-        <constraints>
-          <grid row="3" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false">
-            <minimum-size width="150" height="40"/>
-            <preferred-size width="150" height="40"/>
-            <maximum-size width="150" height="40"/>
-          </grid>
-        </constraints>
-        <properties>
-          <font size="18"/>
-          <hideActionText value="false"/>
-          <text value="Przerwij grę"/>
-          <verticalAlignment value="0"/>
-          <verticalTextPosition value="0"/>
-        </properties>
-      </component>
       <component id="73597" class="javax.swing.JButton" binding="ustawStatkiButton" default-binding="true">
         <constraints>
           <grid row="6" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
@@ -1768,6 +1752,30 @@
         <properties>
           <font size="20"/>
           <foreground color="-2094567"/>
+          <horizontalTextPosition value="0"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="e74cc" class="javax.swing.JLabel" binding="nazwaLabel">
+        <constraints>
+          <grid row="9" column="12" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font size="16"/>
+          <foreground color="-16247069"/>
+          <horizontalAlignment value="0"/>
+          <horizontalTextPosition value="0"/>
+          <text value="Nazwa gracza"/>
+        </properties>
+      </component>
+      <component id="c61c" class="javax.swing.JLabel" binding="nazwaGraczaLabel">
+        <constraints>
+          <grid row="10" column="12" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font size="20" style="1"/>
+          <foreground color="-2094567"/>
+          <horizontalAlignment value="0"/>
           <horizontalTextPosition value="0"/>
           <text value=""/>
         </properties>
