@@ -145,7 +145,7 @@ public class HttpClientGET {
         HttpGet request = new HttpGet("http://127.0.0.1:8080/api/statki/pobierz_nazwe");
         String responseString = "";
 
-        try {
+        try { 
             HttpResponse response = client.execute(request);
             HttpEntity entity = response.getEntity();
             responseString = EntityUtils.toString(entity, "UTF-8");
